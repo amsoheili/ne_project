@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const adminRouter = require("./admin");
-const customerRouter = require("./customer");
+const memberRouter = require("./member");
 const trainerRouter = require("./trainer");
 
 router.get("/", function (req, res, next) {
@@ -10,7 +10,7 @@ router.get("/", function (req, res, next) {
 
 router.use("/admin", adminRouter);
 
-router.use("/customer", customerRouter);
+router.use("/member", memberRouter);
 
 router.use("/trainer", trainerRouter);
 

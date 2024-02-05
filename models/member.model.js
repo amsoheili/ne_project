@@ -1,100 +1,72 @@
-// "use strict";
-// const { Model, DataTypes } = require("sequelize");
+const pool = require("../database");
 
-// module.exports = (sequelize) => {
-//   class Member extends Model {}
-//   Member.init(
-//     {
-//       member_id: {
-//         type: DataTypes.INTEGER,
-//         autoIncrement: true,
-//         primaryKey: true,
-//       },
-//       username: {
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//       },
-//       member_password: {
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//       },
-//       full_name: {
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//       },
-//       email: {
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//       },
-//       fitness_goal: {
-//         type: DataTypes.STRING,
-//         defaultValue: null,
-//       },
-//       monthly_cost: {
-//         type: DataTypes.INTEGER,
-//         allowNull: false,
-//       },
-//       active: {
-//         type: DataTypes.BOOLEAN,
-//         allowNull: false,
-//       },
-//     },
-//     {
-//       sequelize,
-//       modelName: "Member",
-//       tableName: "Member", // Make sure to set the table name to match your actual table name
-//       timestamps: false, // Set to true if your table has createdAt and updatedAt columns
-//     }
-//   );
-
-//   return Member;
-// };
-
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/config.json");
-
-const Member = sequelize.define(
-  "Member",
-  {
-    member_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    member_password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    full_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    fitness_goal: {
-      type: DataTypes.STRING,
-      defaultValue: null,
-    },
-    monthly_cost: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
+const MemberModel = {
+  async getMember({ username, member_password }) {
+    const [result] = await pool.execute(
+      "select * from Member where username = ? and member_password = ?",
+      [username, member_password]
+    );
+    return result;
   },
-  {
-    timestamps: true,
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-  }
-);
+  async getAllMembers() {
+    const [result] = await pool.execute("select * from Member");
+    return result;
+  },
+  async create({
+    username,
+    member_password,
+    full_name,
+    email,
+    fitness_goal,
+    monthly_cost,
+    is_active,
+  }) {
+    const [result] = await pool.execute(
+      "insert into Member (username, member_password, full_name, email, fitness_goal, monthly_cost, is_active) values (?,?,?,?,?,?,?)",
+      [
+        username,
+        member_password,
+        full_name,
+        email,
+        fitness_goal,
+        monthly_cost,
+        is_active,
+      ]
+    );
+    return result;
+  },
+  async delete({ member_id }) {
+    const [result] = await pool.execute(
+      "delete from Member where member_id = ?",
+      [member_id]
+    );
+    return result;
+  },
+  async update({
+    member_id,
+    username,
+    member_password,
+    full_name,
+    email,
+    fitness_goal,
+    monthly_cost,
+    is_active,
+  }) {
+    const [result] = await pool.execute(
+      "update Member set username = ?, member_password = ?, full_name = ?, email = ?, fitness_goal = ?, monthly_cost = ?, is_active = ? where member_id = ?",
+      [
+        username,
+        member_password,
+        full_name,
+        email,
+        fitness_goal,
+        monthly_cost,
+        is_active,
+        member_id,
+      ]
+    );
+    return result;
+  },
+};
 
-module.exports = Member;
+module.exports = MemberModel;

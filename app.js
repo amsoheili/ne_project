@@ -7,17 +7,18 @@ const adminRouter = require("./routes/admin");
 const bodyParser = require("body-parser");
 const { connectToDatabase, test } = require("./database");
 
-// const runQuery = async () => {
-//   await connectToDatabase();
-//   test();
-// };
-
 let indexRouter = require("./routes/index");
 
 var app = express();
-// runQuery();
 
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 app.use("/", indexRouter);
 
