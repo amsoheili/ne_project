@@ -3,7 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const cors = require('cors');
+const cors = require("cors");
 const adminRouter = require("./routes/admin");
 const bodyParser = require("body-parser");
 const { connectToDatabase, test } = require("./database");
@@ -14,17 +14,19 @@ var app = express();
 
 app.use(bodyParser.json());
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests from the specified origin or allow all origins with a wildcard '*'
-    const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500'];
-    const isAllowedOrigin = allowedOrigins.includes(origin) || !origin;
-    callback(null, isAllowedOrigin);
-  },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  allowedHeaders: 'Authorization,Content-Type',  // Include other headers as needed
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests from the specified origin or allow all origins with a wildcard '*'
+      const allowedOrigins = ["http://127.0.0.1:5500", "http://localhost:5500"];
+      const isAllowedOrigin = allowedOrigins.includes(origin) || !origin;
+      callback(null, isAllowedOrigin);
+    },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    allowedHeaders: "Authorization,Content-Type", // Include other headers as needed
+  })
+);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");

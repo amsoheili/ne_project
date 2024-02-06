@@ -67,6 +67,14 @@ const MemberModel = {
     );
     return result;
   },
+  async updateSingleField({ member_id, fieldName, newAmount }) {
+    console.log(member_id, fieldName, newAmount);
+    const [result] = await pool.execute(
+      "update Member set " + fieldName + " = ? where member_id = ?",
+      [newAmount, member_id]
+    );
+    return result;
+  },
 };
 
 module.exports = MemberModel;

@@ -44,7 +44,7 @@ const MemberController = {
   async attendShift(req, res) {
     try {
       const { member_id, shift_id, attendance_date, is_present } = req.body;
-      const createdAttendance = await AttendanceModel.create({
+      const [createdAttendance] = await AttendanceModel.create({
         member_id,
         shift_id,
         attendance_date,
@@ -54,6 +54,20 @@ const MemberController = {
     } catch (error) {
       console.log("Error creating attendance", error.message);
       res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+  async payDebt(req, res) {
+    try {
+      const { member_id } = req.body;
+      const member = await MemberModel.updateSingleField({
+        member_id,
+        fieldName: "monthly_cost",
+        newAmount: 0,
+      });
+      res.status(201).json(member);
+    } catch (error) {
+      console.log("error in member pay debt " + error.message);
+      res.status(500).json({ error: "error in member pay debt" });
     }
   },
 };

@@ -13,6 +13,8 @@ router.post("/login", MemberController.loginMember);
 
 router.post("/attend-shift", MemberController.attendShift);
 
+router.post("/pay-debt", MemberController.payDebt);
+
 router.get("/all", authenticateTokenMiddleware, MemberController.getAllMembers);
 
 module.exports = router;
